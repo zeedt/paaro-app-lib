@@ -5,7 +5,9 @@ import com.zeed.isms.lib.enums.ResponseCode;
 import com.zeed.isms.lib.models.RegistrationDetails;
 import com.zeed.isms.lib.repository.RegistrationDetailsRepository;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -138,9 +141,20 @@ public class RegistrationDetailsService {
 
     public RegistrationDetailsApiModel uploadBulk(MultipartFile file) throws IOException {
 
-        Workbook workbook = new HSSFWorkbook(file.getInputStream());
+        Workbook workbook = new XSSFWorkbook(file.getInputStream());
 
-        FileInputStream fileBytes = new FileInputStream(new File(""));
+        Sheet sheet = workbook.getSheetAt(0);
+
+        int count = sheet.getRow(1).getPhysicalNumberOfCells();
+
+        HashMap<String,Integer> headers = new HashMap<>();
+
+        for (int i=0;i<count;i++) {
+            headers.put(sheet.getRow(0).getCell(i).getStringCellValue(),i);
+        }
+
+
+//        FileInputStream fileBytes = new FileInputStream(new File(""));
 
 
         return null;

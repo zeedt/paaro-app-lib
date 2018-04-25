@@ -10,6 +10,7 @@ public enum ResponseCode {
     DELETED,
     SAVED,
     UPDATED,
-    RECORD_ALREADY_EXIST
+    RECORD_ALREADY_EXIST,
+    BULK_UPLOAD_SUCCESSFULL
 
 }

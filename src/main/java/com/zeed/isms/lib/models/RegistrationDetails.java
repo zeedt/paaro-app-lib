@@ -1,5 +1,7 @@
 package com.zeed.isms.lib.models;
 
+import com.zeed.isms.lib.enums.UserType;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -26,6 +28,14 @@ public class RegistrationDetails implements Serializable {
     @NotNull
     @Column(name = "expt_year_of_grad")
     private Date exptYearOfGrad;
+
+    @Column(name = "date_uploaded")
+    private Date dateUploaded;
+
+    @Column(name = "user_type")
+    @Enumerated(value = EnumType.STRING)
+    @NotNull
+    private UserType userType;
 
     public Long getId() {
         return id;
@@ -65,5 +75,21 @@ public class RegistrationDetails implements Serializable {
 
     public void setExptYearOfGrad(Date exptYearOfGrad) {
         this.exptYearOfGrad = exptYearOfGrad;
+    }
+
+    public Date getDateUploaded() {
+        return dateUploaded;
+    }
+
+    public void setDateUploaded(Date dateUploaded) {
+        this.dateUploaded = dateUploaded;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

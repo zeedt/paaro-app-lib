@@ -40,20 +40,20 @@ public abstract class RegistrationDetailsAbstractController {
         return registrationDetailsService.getRegDetailsById(id);
     }
     @ResponseBody
+    @RequestMapping(value = "/getByRegNo/{regNo}", method = RequestMethod.GET)
+    public RegistrationDetailsApiModel getRegDetailsByRegNo(@PathVariable("regNo") String regNo){
+        return registrationDetailsService.getRegDetailsByRegNo(regNo);
+    }
+    @ResponseBody
     @RequestMapping(value = "/fetchAll", method = RequestMethod.GET)
     public RegistrationDetailsApiModel fetchAllRegDetails(){
-        return registrationDetailsService.fetchALlRegDetails();
+        return registrationDetailsService.fetchAllRegDetails();
     }
 
     @ResponseBody
     @RequestMapping(value = "/uploadBulk", method = RequestMethod.POST)
     public RegistrationDetailsApiModel uploadInBulk(@RequestParam("file") MultipartFile file){
-        try {
             return registrationDetailsService.uploadBulk(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
 

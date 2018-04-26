@@ -6,6 +6,7 @@ import com.zeed.isms.lib.enums.ResponseCode;
 import com.zeed.isms.lib.enums.UserType;
 import com.zeed.isms.lib.models.RegistrationDetails;
 import com.zeed.isms.lib.repository.RegistrationDetailsRepository;
+import com.zeed.usermanagement.models.UserCategory;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -166,7 +167,7 @@ public class RegistrationDetailsService {
                 registrationDetails.setRegNo(row.getCell(1).getStringCellValue());
                 registrationDetails.setDateOfReg(row.getCell(2).getDateCellValue());
                 registrationDetails.setExptYearOfGrad(row.getCell(3).getDateCellValue());
-                registrationDetails.setUserType(UserType.valueOf(row.getCell(4).getStringCellValue()));
+                registrationDetails.setUserType(UserCategory.valueOf(row.getCell(4).getStringCellValue()));
                 registrationDetails.setDateUploaded(new Date());
                 registrationDetailsRepository.save(registrationDetails);
             }

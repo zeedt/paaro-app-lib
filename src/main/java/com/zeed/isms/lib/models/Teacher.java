@@ -1,25 +1,29 @@
 package com.zeed.isms.lib.models;
 
-
-import com.zeed.isms.lib.enums.ClassLevel;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.zeed.isms.lib.enums.PresentClass;
-import com.zeed.usermanagement.models.UserCategory;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-@Entity(name = "isms_user")
-public class IsmsUser implements Serializable {
-
+@Entity
+public class Teacher implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
     @Column(unique = true)
     @NotNull
     private String username;
+
+    @NotNull
+    @Column(name = "password")
+    private String password;
 
     @NotNull
     @Column(name = "first_name")
@@ -29,14 +33,6 @@ public class IsmsUser implements Serializable {
     @Column(name = "last_name")
     private String lastName;
 
-    @NotNull
-    @Column(name = "password")
-    private String password;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_category")
-    private UserCategory userCategory;
 
     @NotNull
     @Column(name = "date_created")
@@ -50,25 +46,32 @@ public class IsmsUser implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "class_level")
-    private ClassLevel classLevel;
 
-    @Column(name = "present_class")
-    @Enumerated(value = EnumType.STRING)
-    private PresentClass presentClass;
+    @Column(name = "staff_id",unique = true)
+    private String staffId;
+
+    @NotNull
+    private boolean isClassTeacher = false;
+
+    private PresentClass classOfClassTeacher;
+
+    @NotNull
+    private boolean isCourseCordinator = false;
+
+    @JsonBackReference
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "teachersList" ,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    private Set<Course> courseHandled = new HashSet<>();
+
 
     @NotNull
     @Column(name = "managed_user_id", unique = true)
     private Long managedUserId;
 
+
     @NotNull
     @Column(name = "is_active")
     private boolean isActive = false;
 
-    @NotNull
-    @Column(name = "reg_no", unique = true)
-    private String regNo;
 
     @Column(name = "is_activated")
     private boolean isActivated = false;
@@ -84,28 +87,44 @@ public class IsmsUser implements Serializable {
         this.id = id;
     }
 
-    public ClassLevel getClassLevel() {
-        return classLevel;
+    public String getStaffId() {
+        return staffId;
     }
 
-    public void setClassLevel(ClassLevel classLevel) {
-        this.classLevel = classLevel;
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
     }
 
-    public PresentClass getPresentClass() {
-        return presentClass;
+    public boolean isClassTeacher() {
+        return isClassTeacher;
     }
 
-    public void setPresentClass(PresentClass presentClass) {
-        this.presentClass = presentClass;
+    public void setClassTeacher(boolean classTeacher) {
+        isClassTeacher = classTeacher;
     }
 
-    public Long getManagedUserId() {
-        return managedUserId;
+    public PresentClass getClassOfClassTeacher() {
+        return classOfClassTeacher;
     }
 
-    public void setManagedUserId(Long managedUserId) {
-        this.managedUserId = managedUserId;
+    public void setClassOfClassTeacher(PresentClass classOfClassTeacher) {
+        this.classOfClassTeacher = classOfClassTeacher;
+    }
+
+    public boolean isCourseCordinator() {
+        return isCourseCordinator;
+    }
+
+    public void setCourseCordinator(boolean courseCordinator) {
+        isCourseCordinator = courseCordinator;
+    }
+
+    public Set<Course> getCourseHandled() {
+        return courseHandled;
+    }
+
+    public void setCourseHandled(Set<Course> courseHandled) {
+        this.courseHandled = courseHandled;
     }
 
     public String getUsername() {
@@ -132,22 +151,6 @@ public class IsmsUser implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public UserCategory getUserCategory() {
-        return userCategory;
-    }
-
-    public void setUserCategory(UserCategory userCategory) {
-        this.userCategory = userCategory;
-    }
-
     public Date getDateCreated() {
         return dateCreated;
     }
@@ -170,6 +173,14 @@ public class IsmsUser implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Long getManagedUserId() {
+        return managedUserId;
+    }
+
+    public void setManagedUserId(Long managedUserId) {
+        this.managedUserId = managedUserId;
     }
 
     public boolean isActive() {
@@ -196,11 +207,11 @@ public class IsmsUser implements Serializable {
         this.activatedDate = activatedDate;
     }
 
-    public String getRegNo() {
-        return regNo;
+    public String getPassword() {
+        return password;
     }
 
-    public void setRegNo(String regNo) {
-        this.regNo = regNo;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

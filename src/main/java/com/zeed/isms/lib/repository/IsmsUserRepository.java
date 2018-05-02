@@ -19,4 +19,8 @@ public interface IsmsUserRepository extends JpaRepository<IsmsUser,Long>{
 
     List<IsmsUser> findAllByManagedUserId(Long id);
 
+    IsmsUser findByUsername(String username);
+
+    IsmsUser findByRegNo(String regNo);
+
 }

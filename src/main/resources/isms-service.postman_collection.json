@@ -1,0 +1,807 @@
+{
+	"info": {
+		"name": "isms-service",
+		"_postman_id": "aa68b5cd-041e-0c57-456e-27a80e752c5d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Registeration Details",
+			"description": "",
+			"item": [
+				{
+					"name": "fetch by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "c875a48b-af13-4cae-a2c5-32a39fac7777",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "localhost:7071/regDetails/get/53",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"regDetails",
+								"get",
+								"53"
+							]
+						},
+						"description": "Fetch registeration details by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "fetch by regNo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "b1d65eeb-8936-4d12-ab3d-280fe674f879",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "localhost:7071/regDetails/getByRegNo/Std002",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"regDetails",
+								"getByRegNo",
+								"Std002"
+							]
+						},
+						"description": "Fetch registeration details by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete by reg details Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "c875a48b-af13-4cae-a2c5-32a39fac7777",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "localhost:7071/regDetails/delete/48",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"regDetails",
+								"delete",
+								"48"
+							]
+						},
+						"description": "Delete reg details by Id"
+					},
+					"response": []
+				},
+				{
+					"name": "Add reg details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "c875a48b-af13-4cae-a2c5-32a39fac7777",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"olarenwaju adegboyega\",\n\t\"regNo\" : \"staff002\",\n\t\"dateOfReg\" : \"2018-01-01\",\n\t\"exptYearOfGrad\" : \"2018-01-01\",\n\t\"userType\" : \"STUDENT\"\n}"
+						},
+						"url": {
+							"raw": "localhost:7071/regDetails/add",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"regDetails",
+								"add"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Reg Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "c875a48b-af13-4cae-a2c5-32a39fac7777",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"42\",\n\t\"name\" : \"olarenwaju Bukola\",\n\t\"regNo\" : \"staff002\",\n\t\"dateOfReg\" : \"2018-01-01\",\n\t\"exptYearOfGrad\" : \"2017-01-01\"\n}"
+						},
+						"url": {
+							"raw": "localhost:7071/regDetails/update",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"regDetails",
+								"update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch All Reg Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "c875a48b-af13-4cae-a2c5-32a39fac7777",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"4\",\n\t\"name\" : \"olarenwaju Bukola\",\n\t\"regNo\" : \"staff002\",\n\t\"dateOfReg\" : \"2018-01-01\",\n\t\"exptYearOfGrad\" : \"2017-01-01\"\n}"
+						},
+						"url": {
+							"raw": "localhost:7071/regDetails/fetchAll",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"regDetails",
+								"fetchAll"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Reg details in bulk",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "b1d65eeb-8936-4d12-ab3d-280fe674f879",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"value": "",
+									"description": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:7071/regDetails/uploadBulk",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"regDetails",
+								"uploadBulk"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Isms User service",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:7071/ismsuser/createUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "d5ccd7bc-7729-4314-a3f7-91c550b8df57",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"username\": \"zeedo2\",\n        \"firstName\": \"zeed\",\n        \"lastName\": \"zeed\",\n        \"password\": \"password\",\n        \"userCategory\": \"STUDENT\",\n        \"dateCreated\": \"2018-01-01\",\n        \"phoneNumber\": \"zeed\",\n        \"email\": \"zeed\",\n        \"regNo\": \"Std002\",\n        \"activatedDate\": \"2018-01-01\",\n        \"classLevel\": \"JSS\",\n        \"presentClass\": \"JSS1\"\n    }"
+						},
+						"url": {
+							"raw": "localhost:7071/ismsuser/createUser",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"ismsuser",
+								"createUser"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Teacher service",
+			"description": "",
+			"item": [
+				{
+					"name": "Add teacher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "d3783fe3-74d3-4918-a9d2-c83666b32c27",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"teacher\" : {\n\t\t\"username\" : \"zeedteacher5\",\n\t\t\"staffId\" : \"0004\",\n\t\t\"phoneNumber\" : \"0808888888\",\n\t\t\"lastName\" : \"Ade\",\n\t\t\"firstName\" : \"Tolani\",\n\t\t\"email\" : \"hhhhhh@yahoo.com\",\n\t\t\"password\" : \"password\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "localhost:7071/teacher/add",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"teacher",
+								"add"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update teacher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "6f2dc50e-3dd7-4a6c-aa01-718eec369e87",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"teacher\" : {\n\t\t\"id\" : 66,\n\t\t\"username\" : \"zeedteacher3\",\n\t\t\"staffId\" : \"0003\",\n\t\t\"phoneNumber\" : \"6666666666\",\n\t\t\"lastName\" : \"Ade\",\n\t\t\"firstName\" : \"Tolani\",\n\t\t\"email\" : \"hhhhhh@yahoo.com\",\n\t\t\"password\" : \"password\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "localhost:7071/teacher/update",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"teacher",
+								"update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete teacher by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "8194b071-440c-47f1-89fb-89374463a1ea",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:7071/teacher/delete/64",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"teacher",
+								"delete",
+								"64"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get teacher by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "6f2dc50e-3dd7-4a6c-aa01-718eec369e87",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:7071/teacher/get/66",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"teacher",
+								"get",
+								"66"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get teacher by staff Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "6f2dc50e-3dd7-4a6c-aa01-718eec369e87",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:7071/teacher/getByTeacherCode/0003",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"teacher",
+								"getByTeacherCode",
+								"0003"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch all teachers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "6f2dc50e-3dd7-4a6c-aa01-718eec369e87",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:7071/teacher/fetchAll",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"teacher",
+								"fetchAll"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Course service",
+			"description": "",
+			"item": [
+				{
+					"name": "Add course",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "d3783fe3-74d3-4918-a9d2-c83666b32c27",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"course\" : {\n\t\t\"courseCode\" : \"GNS102\",\n\t\t\"courseTitle\" : \"General Studies\",\n\t\t\"presentClass\" : \"SS1\",\n\t\t\"classLevel\" : \"SSS\",\n\t\t\"courseDescription\" : \"General studies 2\"\n\t},\n\t\"coordinatorCode\" : \"\"\n}"
+						},
+						"url": {
+							"raw": "localhost:7071/course/add",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"course",
+								"add"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update course",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "d3783fe3-74d3-4918-a9d2-c83666b32c27",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"course\" : {\n\t\t\"id\" : \"70\",\n\t\t\"courseCode\" : \"GNS101\",\n\t\t\"courseTitle\" : \"General Studies\",\n\t\t\"presentClass\" : \"JSS2\",\n\t\t\"classLevel\" : \"JSS\",\n\t\t\"courseDescription\" : \"General studies 2\",\n\t\t\"dateCreated\" : \"2018-02-02\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "localhost:7071/course/update",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"course",
+								"update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete course by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "d3783fe3-74d3-4918-a9d2-c83666b32c27",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:7071/course/delete/72",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"course",
+								"delete",
+								"72"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get course by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "d3783fe3-74d3-4918-a9d2-c83666b32c27",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:7071/course/get/73",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"course",
+								"get",
+								"73"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get course by Course Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "d3783fe3-74d3-4918-a9d2-c83666b32c27",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:7071/course/getByCourseCode/GND101",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"course",
+								"getByCourseCode",
+								"GND101"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch all courses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "d3783fe3-74d3-4918-a9d2-c83666b32c27",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:7071/course/fetchAll",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"course",
+								"fetchAll"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

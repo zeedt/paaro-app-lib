@@ -1,6 +1,5 @@
 package com.zeed.isms.lib.models;
 
-import com.zeed.isms.lib.enums.UserType;
 import com.zeed.usermanagement.models.UserCategory;
 
 import javax.persistence.*;

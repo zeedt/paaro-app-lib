@@ -1,4 +1,4 @@
-package com.zeed.isms.lib;
+package com.zeed.paaro.lib;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +11,7 @@ public class IsmsLibApplicationTests {
 
 	@Test
 	public void contextLoads() {
+
 	}
 
 }

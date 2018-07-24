@@ -223,7 +223,7 @@ public class Example {
   }
 
   public static void baselineExample() throws IOException {
-    SendGrid sg = new SendGrid("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");
+    SendGrid sg = new SendGrid("");
     sg.addRequestHeader("X-Mock", "true");
 
     Request request = new Request();

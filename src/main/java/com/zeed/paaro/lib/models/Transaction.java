@@ -1,7 +1,6 @@
 package com.zeed.paaro.lib.models;
 
 import com.zeed.paaro.lib.enums.TransactionStatus;
-import com.zeed.paaro.lib.enums.TransactionType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,9 +16,6 @@ public class Transaction implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Enumerated(value = EnumType.STRING)
-    private TransactionType transactionType;
-
     private String fromAccountNumber;
 
     private String toAccountNumber;
@@ -27,11 +23,16 @@ public class Transaction implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private TransactionStatus transactionStatus;
 
+    @NotNull
     private String narration;
 
     @NotNull
     private Long userId;
 
+    @NotNull
+    private String email;
+
+    @NotNull
     private String paaroReferenceId;
 
     private String thirdPartyReferenceId;
@@ -48,22 +49,16 @@ public class Transaction implements Serializable {
     @NotNull
     private BigDecimal equivalentAmount;
 
+    @OneToOne
     @NotNull
-    private String fromCurrency;
+    private Currency fromCurrency;
 
+    @OneToOne
     @NotNull
-    private String toCurrency;
+    private Currency toCurrency;
 
     @NotNull
     private BigDecimal exchangeRate;
-
-    public TransactionType getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
-    }
 
     public String getFromAccountNumber() {
         return fromAccountNumber;
@@ -153,19 +148,19 @@ public class Transaction implements Serializable {
         this.equivalentAmount = equivalentAmount;
     }
 
-    public String getFromCurrency() {
+    public Currency getFromCurrency() {
         return fromCurrency;
     }
 
-    public void setFromCurrency(String fromCurrency) {
+    public void setFromCurrency(Currency fromCurrency) {
         this.fromCurrency = fromCurrency;
     }
 
-    public String getToCurrency() {
+    public Currency getToCurrency() {
         return toCurrency;
     }
 
-    public void setToCurrency(String toCurrency) {
+    public void setToCurrency(Currency toCurrency) {
         this.toCurrency = toCurrency;
     }
 
@@ -175,5 +170,21 @@ public class Transaction implements Serializable {
 
     public void setExchangeRate(BigDecimal exchangeRate) {
         this.exchangeRate = exchangeRate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -20,10 +20,16 @@ import com.sendgrid.Setting;
 import com.sendgrid.SpamCheckSetting;
 import com.sendgrid.SubscriptionTrackingSetting;
 import com.sendgrid.TrackingSettings;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+@Service
 public class Example {
+
+  @Value("${spring.sendgrid.api-key}")
+  public String sendGridApiKey;
 
   // Fully populated Mail object
   public static Mail buildKitchenSink() throws IOException {
@@ -216,7 +222,7 @@ public class Example {
     // is created for you. It can be accessed via
     // mail.personalization.get(0) as it is a List object
     Mail mail = new Mail(from, subject, to, content);
-    Email email = new Email("yusufsaheedtaiwo@yahoo.com");
+    Email email = new Email("soluwawunmi@gmail.com");
     mail.personalization.get(0).addTo(email);
 
     return mail;
@@ -242,7 +248,7 @@ public class Example {
   }
 
   public static void kitchenSinkExample() throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+    SendGrid sg = new SendGrid("");
     sg.addRequestHeader("X-Mock", "true");
 
     Request request = new Request();

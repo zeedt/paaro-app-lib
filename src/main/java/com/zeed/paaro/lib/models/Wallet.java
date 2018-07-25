@@ -1,8 +1,12 @@
 package com.zeed.paaro.lib.models;
 
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 public class Wallet implements Serializable {
@@ -11,15 +15,23 @@ public class Wallet implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonManagedReference
     @ManyToOne
     private Currency currency;
 
-    private String accountBalance;
+    @NotNull
+    private BigDecimal availableAccountBalance = BigDecimal.valueOf(0);
 
-    private boolean isActive;
+    @NotNull
+    private BigDecimal ledgerAccountBalance = BigDecimal.valueOf(0);
+
+    private boolean isActive = true;
 
     @NotNull
     private Long userId;
+
+    @NotNull
+    private String email;
 
     public Long getId() {
         return id;
@@ -37,12 +49,12 @@ public class Wallet implements Serializable {
         this.currency = currency;
     }
 
-    public String getAccountBalance() {
-        return accountBalance;
+    public BigDecimal getAvailableAccountBalance() {
+        return availableAccountBalance;
     }
 
-    public void setAccountBalance(String accountBalance) {
-        this.accountBalance = accountBalance;
+    public void setAvailableAccountBalance(BigDecimal availableAccountBalance) {
+        this.availableAccountBalance = availableAccountBalance;
     }
 
     public boolean isActive() {
@@ -59,5 +71,21 @@ public class Wallet implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public BigDecimal getLedgerAccountBalance() {
+        return ledgerAccountBalance;
+    }
+
+    public void setLedgerAccountBalance(BigDecimal ledgerAccountBalance) {
+        this.ledgerAccountBalance = ledgerAccountBalance;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

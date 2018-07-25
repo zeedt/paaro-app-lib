@@ -5,7 +5,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("direct_transfer")
-public class DirectTransferTransaction extends Transaction {
+@DiscriminatorValue("wallet_fund")
+public class WalletFundingTransaction extends Transaction {
 
 }

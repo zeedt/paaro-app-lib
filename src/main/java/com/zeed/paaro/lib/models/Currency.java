@@ -1,5 +1,7 @@
 package com.zeed.paaro.lib.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,6 +23,7 @@ public class Currency implements Serializable {
     @NotNull
     private String description;
 
+    @JsonBackReference
     @OneToMany (mappedBy = "currency", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Wallet> walletList;
 

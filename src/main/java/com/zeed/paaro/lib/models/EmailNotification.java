@@ -1,5 +1,6 @@
 package com.zeed.paaro.lib.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmailNotification {
@@ -8,11 +9,11 @@ public class EmailNotification {
 
     private String to;
 
-    private List<String> tos;
+    private List<String> tos = new ArrayList<>();
 
-    private List<String> ccs;
+    private List<String> ccs = new ArrayList<>();
 
-    private List<String> bcs;
+    private List<String> bcs = new ArrayList<>();
 
     private String content;
 
@@ -63,5 +64,15 @@ public class EmailNotification {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void addTo(String toEmail) {
+        this.tos.add(toEmail);
+    }
+    public void addCc(String ccEmail) {
+        this.ccs.add(ccEmail);
+    }
+    public void addBcc(String bccEmail) {
+        this.bcs.add(bccEmail);
     }
 }

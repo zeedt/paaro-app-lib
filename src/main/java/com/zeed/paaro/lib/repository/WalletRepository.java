@@ -15,4 +15,6 @@ public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
     List<Wallet> findAllByEmail(String email);
 
+    Wallet findByEmailAndCurrency_Type(String email, String currencyType);
+
 }

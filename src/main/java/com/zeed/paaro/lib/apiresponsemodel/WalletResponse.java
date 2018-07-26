@@ -2,6 +2,7 @@ package com.zeed.paaro.lib.apiresponsemodel;
 
 import com.zeed.paaro.lib.enums.ApiResponseCode;
 import com.zeed.paaro.lib.models.Wallet;
+import com.zeed.paaro.lib.models.WalletFundingTransaction;
 import com.zeed.usermanagement.enums.ResponseStatus;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public class WalletResponse {
     private Wallet wallet;
 
     private List<Wallet> walletList;
+
+    List<WalletFundingTransaction> walletFundingTransactions;
 
     public String getMessage() {
         return message;
@@ -59,4 +62,11 @@ public class WalletResponse {
 
     }
 
+    public List<WalletFundingTransaction> getWalletFundingTransactions() {
+        return walletFundingTransactions;
+    }
+
+    public void setWalletFundingTransactions(List<WalletFundingTransaction> walletFundingTransactions) {
+        this.walletFundingTransactions = walletFundingTransactions;
+    }
 }

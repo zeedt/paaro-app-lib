@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -21,13 +22,11 @@ public class Transaction implements Serializable {
     private String toAccountNumber;
 
     @Enumerated(value = EnumType.STRING)
+    @NotNull
     private TransactionStatus transactionStatus;
 
     @NotNull
     private String narration;
-
-    @NotNull
-    private Long userId;
 
     @NotNull
     private String email;
@@ -50,15 +49,26 @@ public class Transaction implements Serializable {
     private BigDecimal equivalentAmount;
 
     @OneToOne
-    @NotNull
+    private Currency currency;
+
+    @OneToOne
     private Currency fromCurrency;
 
     @OneToOne
-    @NotNull
     private Currency toCurrency;
 
     @NotNull
     private BigDecimal exchangeRate;
+
+    @NotNull
+    private Date initiatedDate;
+
+    @NotNull
+    private Date lastUpdatedDate;
+
+    @NotNull
+    @OneToOne
+    private Wallet wallet;
 
     public String getFromAccountNumber() {
         return fromAccountNumber;
@@ -90,14 +100,6 @@ public class Transaction implements Serializable {
 
     public void setNarration(String narration) {
         this.narration = narration;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getPaaroReferenceId() {
@@ -186,5 +188,37 @@ public class Transaction implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Date getInitiatedDate() {
+        return initiatedDate;
+    }
+
+    public void setInitiatedDate(Date initiatedDate) {
+        this.initiatedDate = initiatedDate;
+    }
+
+    public Date getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(Date lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 }

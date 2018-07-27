@@ -6,5 +6,6 @@ public enum ApiResponseCode {
     NULL_RESPONSE,
     NOT_FOUND,
     SYSTEM_ERROR,
-    ALREADY_EXIST
+    ALREADY_EXIST,
+    UNABLE_TO_PROCESS
 }

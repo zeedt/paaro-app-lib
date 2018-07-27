@@ -70,6 +70,11 @@ public class Transaction implements Serializable {
     @OneToOne
     private Wallet wallet;
 
+    @OneToOne
+    private TransferRequestMap transferRequestMap;
+
+    private String errorMessage;
+
     public String getFromAccountNumber() {
         return fromAccountNumber;
     }
@@ -220,5 +225,21 @@ public class Transaction implements Serializable {
 
     public void setWallet(Wallet wallet) {
         this.wallet = wallet;
+    }
+
+    public TransferRequestMap getTransferRequestMap() {
+        return transferRequestMap;
+    }
+
+    public void setTransferRequestMap(TransferRequestMap transferRequestMap) {
+        this.transferRequestMap = transferRequestMap;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

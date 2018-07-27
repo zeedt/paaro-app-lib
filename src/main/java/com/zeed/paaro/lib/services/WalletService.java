@@ -228,24 +228,35 @@ public class WalletService {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Currency type cannot be blank");
         }
 
-        Wallet wallet = getCurrentLoggedInUserWalletByCurrencyType(walletRequest.getCurrencyType());
+        UserDetailsTokenEnvelope userDetailsTokenEnvelope = (UserDetailsTokenEnvelope) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetailsTokenEnvelope.managedUser.getEmail();
 
-        if (wallet == null) {
-            return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Wallet of the passed currency not found");
+        if (StringUtils.isEmpty(email)) {
+            return WalletResponse.returnResponseWithCode(ApiResponseCode.NULL_RESPONSE, "Unable to get email of the user");
         }
 
-        String savedCurrencyType = (wallet.getCurrency() == null || StringUtils.isEmpty(wallet.getCurrency().getType())) ? null :  wallet.getCurrency().getType();
-
-        if (savedCurrencyType == null) {
-            return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Blank currency type found for the wallet");
-        }
-
-        List<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByEmailAndCurrency_Type(wallet.getEmail(), wallet.getCurrency().getType());
+        List<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByEmailAndCurrency_Type(email, walletRequest.getCurrencyType());
 
         WalletResponse walletResponse = new WalletResponse();
         walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
         walletResponse.setMessage("Transactions fetched");
-        walletResponse.setWallet(wallet);
+        walletResponse.setWalletFundingTransactions(fundingTransactions);
+
+        return walletResponse;
+
+    }
+
+    public WalletResponse findALlFundingWalletTransactionsByEmail(WalletRequest walletRequest) {
+
+        if (walletRequest == null || StringUtils.isEmpty(walletRequest.getCurrencyType()) || StringUtils.isEmpty(walletRequest.getEmail())) {
+            return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Currency type and email cannot be blank");
+        }
+
+        List<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByEmailAndCurrency_Type(walletRequest.getEmail(), walletRequest.getCurrency().getType());
+
+        WalletResponse walletResponse = new WalletResponse();
+        walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
+        walletResponse.setMessage("Transactions fetched");
         walletResponse.setWalletFundingTransactions(fundingTransactions);
 
         return walletResponse;
@@ -303,7 +314,7 @@ public class WalletService {
 
     }
 
-    private Wallet getCurrentLoggedInUserWalletByCurrencyType(String currencyType) {
+    public Wallet getCurrentLoggedInUserWalletByCurrencyType(String currencyType) {
 
         UserDetailsTokenEnvelope userDetailsTokenEnvelope = (UserDetailsTokenEnvelope) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetailsTokenEnvelope.managedUser.getEmail();

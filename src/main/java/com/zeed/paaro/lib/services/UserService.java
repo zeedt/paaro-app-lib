@@ -31,7 +31,7 @@ public class UserService {
             request.add("password", managedUser.getPassword());
             request.add("grant_type", "password");
             String url = "http://127.0.0.1:8011/oauth/token" + "?grant_type=password&username=" + managedUser.getEmail() + "&password=" + managedUser.getPassword();
-            Object object = restApiClient.apiPostAndGetClass(url,OAuth2AccessToken.class,request,headers);
+            Object object = restApiClient.apiPostAndGetClass(url,OAuth2AccessToken.class,request,headers, false);
             return object;
         } catch (Exception e) {
             Map<String,String> message = new HashMap<>();

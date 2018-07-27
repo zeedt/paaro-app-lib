@@ -65,7 +65,7 @@
 
 		<dependency>
 			<groupId>com.zeed.usermanagement</groupId>
-			<artifactId>user-lib</artifactId>
+			<artifactId>paaro-user-lib</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.sendgrid/sendgrid-java -->

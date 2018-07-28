@@ -1,6 +1,8 @@
 package com.zeed.paaro.lib.models;
 
 import com.zeed.paaro.lib.enums.TransactionStatus;
+import com.zeed.usermanagement.models.ManagedUser;
+import org.hibernate.engine.spi.Managed;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,7 +31,8 @@ public class Transaction implements Serializable {
     private String narration;
 
     @NotNull
-    private String email;
+    @ManyToOne
+    private ManagedUser managedUser;
 
     @NotNull
     private String paaroReferenceId;
@@ -187,12 +190,12 @@ public class Transaction implements Serializable {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public ManagedUser getManagedUser() {
+        return managedUser;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setManagedUser(ManagedUser managedUser) {
+        this.managedUser = managedUser;
     }
 
     public Date getInitiatedDate() {

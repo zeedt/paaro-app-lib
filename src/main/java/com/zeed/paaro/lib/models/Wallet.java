@@ -2,8 +2,8 @@ package com.zeed.paaro.lib.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.zeed.usermanagement.models.ManagedUser;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -31,10 +31,9 @@ public class Wallet implements Serializable {
     private boolean isActive = true;
 
     @NotNull
-    private Long userId;
+    @ManyToOne
+    private ManagedUser managedUser;
 
-    @NotNull
-    private String email;
 
     public Long getId() {
         return id;
@@ -68,14 +67,6 @@ public class Wallet implements Serializable {
         isActive = active;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public BigDecimal getLedgerAccountBalance() {
         return ledgerAccountBalance;
     }
@@ -84,11 +75,11 @@ public class Wallet implements Serializable {
         this.ledgerAccountBalance = ledgerAccountBalance;
     }
 
-    public String getEmail() {
-        return email;
+    public ManagedUser getManagedUser() {
+        return managedUser;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setManagedUser(ManagedUser managedUser) {
+        this.managedUser = managedUser;
     }
 }

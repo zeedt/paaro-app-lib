@@ -10,11 +10,11 @@ import java.util.List;
 @Repository
 public interface WalletTransferTransactionRepository extends JpaRepository<WalletTransferTransaction, Long> {
 
-    List<WalletTransferTransaction> findAllByEmailAndCurrency_Type(String email, String currency);
+    List<WalletTransferTransaction> findAllByManagedUser_EmailAndFromCurrency_Type(String email, String currency);
 
-    List<WalletTransferTransaction> findAllByEmail(String email);
+    List<WalletTransferTransaction> findAllByManagedUser_Email(String email);
 
-    List<WalletTransferTransaction> findAllByEmailAndTransactionStatus(String email, TransactionStatus transactionStatus);
+    List<WalletTransferTransaction> findAllByManagedUser_EmailAndTransactionStatus(String email, TransactionStatus transactionStatus);
 
 
 

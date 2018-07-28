@@ -58,16 +58,18 @@ public class TransferService {
         }
 
         walletTransferRequest.setWallet(wallet);
-        walletTransferRequest.setEmail(wallet.getEmail());
+        walletTransferRequest.setFromCurrency(wallet.getCurrency());
 
         WalletTransferTransaction walletTransferTransaction = createWalletTransactionFromTransferRequest(walletTransferRequest);
+
+        UserDetailsTokenEnvelope userDetailsTokenEnvelope = (UserDetailsTokenEnvelope) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        walletTransferTransaction.setManagedUser(userDetailsTokenEnvelope.managedUser);
 
         walletTransferTransactionRepository.save(walletTransferTransaction);
 
         BigDecimal newAvailableAccountBalance = wallet.getAvailableAccountBalance().subtract(walletTransferRequest.getTotalAmount());
-        BigDecimal newLedgerBalance = wallet.getLedgerAccountBalance().add(walletTransferRequest.getTotalAmount());
         wallet.setAvailableAccountBalance(newAvailableAccountBalance);
-        wallet.setLedgerAccountBalance(newLedgerBalance);
         walletRepository.save(wallet);
 
         WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
@@ -82,11 +84,11 @@ public class TransferService {
 
     public String getValidationRequestErrorMessage(WalletTransferRequest walletTransferRequest) {
 
-        if (StringUtils.isEmpty(walletTransferRequest.getEmail()) || StringUtils.isEmpty(walletTransferRequest.getNarration()) ||
+        if (StringUtils.isEmpty(walletTransferRequest.getNarration()) ||
                 StringUtils.isEmpty(walletTransferRequest.getPaaroTransactionReferenceId())  || StringUtils.isEmpty(walletTransferRequest.getToCurrencyType())
                 || StringUtils.isEmpty(walletTransferRequest.getFromCurrencyType()) ) {
 
-            return "Email, narration, paaro transaction reference id, from and to currency type cannot be blank.";
+            return "Narration, paaro transaction reference id, from and to currency type cannot be blank.";
 
         }
 
@@ -129,6 +131,7 @@ public class TransferService {
         }
 
         walletTransferRequest.setToCurrency(toCurrency);
+
         return null;
 
     }
@@ -146,7 +149,7 @@ public class TransferService {
             return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.NULL_RESPONSE, "Unable to get email of the user");
         }
 
-        List<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByEmailAndCurrency_Type(email, walletTransferRequest.getCurrency());
+        List<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_EmailAndFromCurrency_Type(email, walletTransferRequest.getCurrency());
 
         WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
         walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
@@ -163,7 +166,7 @@ public class TransferService {
             return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "currency and email cannot be blank");
         }
 
-        List<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByEmailAndCurrency_Type(walletTransferRequest.getEmail(), walletTransferRequest.getCurrency());
+        List<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_EmailAndFromCurrency_Type(walletTransferRequest.getEmail(), walletTransferRequest.getCurrency());
 
         WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
         walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
@@ -179,7 +182,7 @@ public class TransferService {
             return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Email cannot be blank");
         }
 
-        List<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByEmail(walletTransferRequest.getEmail());
+        List<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_Email(walletTransferRequest.getEmail());
 
         WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
         walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
@@ -201,7 +204,7 @@ public class TransferService {
         }
 
 
-        List<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByEmailAndTransactionStatus(email, TransactionStatus.CUSTOMER_LOGGED_REQUEST);
+        List<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_EmailAndTransactionStatus(email, TransactionStatus.CUSTOMER_LOGGED_REQUEST);
 
         WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
         walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
@@ -221,9 +224,9 @@ public class TransferService {
         transaction.setTotalAmount(walletTransferRequest.getTotalAmount());
         transaction.setEquivalentAmount(walletTransferRequest.getEquivalentAmount());
         transaction.setExchangeRate(walletTransferRequest.getExchangeRate());
-        transaction.setEmail(walletTransferRequest.getEmail());
         transaction.setToAccountNumber(walletTransferRequest.getToAccountNumber());
         transaction.setToCurrency(walletTransferRequest.getToCurrency());
+        transaction.setFromCurrency(walletTransferRequest.getFromCurrency());
         transaction.setChargeAmount(walletTransferRequest.getChargeAmount());
         transaction.setWallet(walletTransferRequest.getWallet());
         transaction.setNarration(walletTransferRequest.getNarration());

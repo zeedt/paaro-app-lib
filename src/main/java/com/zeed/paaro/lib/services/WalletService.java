@@ -4,6 +4,7 @@ import com.zeed.paaro.lib.apirequestmodel.WalletRequest;
 import com.zeed.paaro.lib.apiresponsemodel.WalletResponse;
 import com.zeed.paaro.lib.email.sendgrid.SendGridEmail;
 import com.zeed.paaro.lib.enums.ApiResponseCode;
+import com.zeed.paaro.lib.enums.TransactionStatus;
 import com.zeed.paaro.lib.models.*;
 import com.zeed.paaro.lib.repository.CurrencyRepository;
 import com.zeed.paaro.lib.repository.WalletFundingTransactionRepository;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class WalletService {
 
     @Autowired
@@ -64,7 +67,7 @@ public class WalletService {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Null id passed");
         }
 
-        List<Wallet> wallets = walletRepository.findAllByUserId(id);
+        List<Wallet> wallets = walletRepository.findAllByManagedUser_Id(id);
 
         if (CollectionUtils.isEmpty(wallets)) {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.NOT_FOUND, "No wallet found for user");
@@ -84,7 +87,9 @@ public class WalletService {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Email cannot be blank");
         }
 
-        List<Wallet> wallets = walletRepository.findAllByEmail(email);
+
+
+        List<Wallet> wallets = walletRepository.findAllByManagedUser_Email(email);
 
         if (CollectionUtils.isEmpty(wallets)) {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.NOT_FOUND, "No wallet found for email");
@@ -123,9 +128,7 @@ public class WalletService {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Invalid credentials");
         }
 
-        String email = userDetailsTokenEnvelope.managedUser.getEmail();
-
-        List<Wallet> wallets = walletRepository.findAllByEmail(email);
+        List<Wallet> wallets = walletRepository.findAllByManagedUser_Id(userDetailsTokenEnvelope.managedUser.getId());
 
         if (CollectionUtils.isEmpty(wallets)) {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.NULL_RESPONSE, "No wallet found for user");
@@ -159,7 +162,7 @@ public class WalletService {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.NOT_FOUND, "The currency type is not found on the system. Please choose the appropriate currency");
         }
 
-        List<Wallet> wallets = walletRepository.findAllByCurrency_TypeAndEmail(walletRequest.getCurrencyType(), email);
+        List<Wallet> wallets = walletRepository.findAllByCurrency_TypeAndManagedUser_Email(walletRequest.getCurrencyType(), email);
 
         if (!CollectionUtils.isEmpty(wallets)) {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.ALREADY_EXIST, "Wallet of the passed currency already exist for user");
@@ -168,8 +171,7 @@ public class WalletService {
             Wallet wallet = new Wallet();
             wallet.setCurrency(currency);
             wallet.setActive(true);
-            wallet.setUserId(userDetailsTokenEnvelope.managedUser.getId());
-            wallet.setEmail(email);
+            wallet.setManagedUser(userDetailsTokenEnvelope.managedUser);
             walletRepository.save(wallet);
 
             WalletResponse walletResponse = new WalletResponse();
@@ -201,21 +203,28 @@ public class WalletService {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.NOT_FOUND, "Wallet of the specified currency type not found for user");
         }
 
+        UserDetailsTokenEnvelope userDetailsTokenEnvelope = (UserDetailsTokenEnvelope) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         walletRequest.setWallet(wallet);
-        walletRequest.setEmail(wallet.getEmail());
 
         WalletFundingTransaction fundingTransaction = createFundTransactionFromWalletrequest(walletRequest);
+        fundingTransaction.setManagedUser(userDetailsTokenEnvelope.managedUser);
 
         walletFundingTransactionRepository.save(fundingTransaction);
-
-        BigDecimal walletAmount = wallet.getAvailableAccountBalance();
-
-        wallet.setAvailableAccountBalance(walletAmount.add(fundingTransaction.getActualAmount()));
-        walletRepository.save(wallet);
-
         WalletResponse walletResponse = new WalletResponse();
+
+
+        if (fundingTransaction.getTransactionStatus() == TransactionStatus.SUCCESSFULL) {
+            BigDecimal walletAmount = wallet.getAvailableAccountBalance();
+            BigDecimal walletLedgerAmount = wallet.getLedgerAccountBalance();
+
+            wallet.setAvailableAccountBalance(walletAmount.add(fundingTransaction.getActualAmount()));
+            wallet.setLedgerAccountBalance(walletLedgerAmount.add(fundingTransaction.getActualAmount()));
+            walletRepository.save(wallet);
+            walletResponse.setMessage("Wallet has been credited with " + walletRequest.getActualAmount());
+        }
+
         walletResponse.setWallet(wallet);
-        walletResponse.setMessage("Wallet has been credited with " + walletRequest.getActualAmount());
         walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
 
         return walletResponse;
@@ -235,7 +244,7 @@ public class WalletService {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.NULL_RESPONSE, "Unable to get email of the user");
         }
 
-        List<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByEmailAndCurrency_Type(email, walletRequest.getCurrencyType());
+        List<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByManagedUser_EmailAndCurrency_Type(email, walletRequest.getCurrencyType());
 
         WalletResponse walletResponse = new WalletResponse();
         walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
@@ -252,7 +261,7 @@ public class WalletService {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Currency type and email cannot be blank");
         }
 
-        List<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByEmailAndCurrency_Type(walletRequest.getEmail(), walletRequest.getCurrency().getType());
+        List<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByManagedUser_EmailAndCurrency_Type(walletRequest.getEmail(), walletRequest.getCurrencyType());
 
         WalletResponse walletResponse = new WalletResponse();
         walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
@@ -267,11 +276,11 @@ public class WalletService {
 
     public String getValidationRequestErrorMessage(WalletRequest walletRequest) {
 
-        if (StringUtils.isEmpty(walletRequest.getEmail()) || StringUtils.isEmpty(walletRequest.getNarration()) ||
+        if (StringUtils.isEmpty(walletRequest.getNarration()) ||
                 StringUtils.isEmpty(walletRequest.getPaaroTransactionReferenceId())  || StringUtils.isEmpty(walletRequest.getThirdPartyTransactionId())
-                || StringUtils.isEmpty(walletRequest.getCurrencyType()) ) {
+                || StringUtils.isEmpty(walletRequest.getCurrencyType()) || walletRequest.getTransactionStatus() == null ) {
 
-            return "Email, narration, paaro transaction reference id, third party transaction reference id and currency type cannot be blank.";
+            return "Nnarration, paaro transaction reference id, transaction status, third party transaction reference id and currency type cannot be blank.";
 
         }
 
@@ -319,10 +328,7 @@ public class WalletService {
         UserDetailsTokenEnvelope userDetailsTokenEnvelope = (UserDetailsTokenEnvelope) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetailsTokenEnvelope.managedUser.getEmail();
 
-        Wallet wallet = walletRepository.findByEmailAndCurrency_Type(email, currencyType);
-
-        return wallet;
-
+        return walletRepository.findByManagedUser_EmailAndCurrency_Type(email, currencyType);
 
     }
 
@@ -336,7 +342,6 @@ public class WalletService {
         transaction.setTotalAmount(walletRequest.getTotalAmount());
         transaction.setEquivalentAmount(walletRequest.getActualAmount());
         transaction.setExchangeRate(walletRequest.getExchangeRate());
-        transaction.setEmail(walletRequest.getEmail());
         transaction.setFromAccountNumber(walletRequest.getFromAccountNumber());
         transaction.setCurrency(walletRequest.getCurrency());
         transaction.setChargeAmount(walletRequest.getChargeAmount());

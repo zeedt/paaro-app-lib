@@ -7,14 +7,14 @@ import java.util.List;
 
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
-    List<Wallet> findAllByUserId(Long id);
+    List<Wallet> findAllByManagedUser_Id(Long id);
 
     List<Wallet> findAllByCurrency_Type(String type);
 
-    List<Wallet> findAllByCurrency_TypeAndEmail(String type, String email);
+    List<Wallet> findAllByCurrency_TypeAndManagedUser_Email(String type, String email);
 
-    List<Wallet> findAllByEmail(String email);
+    List<Wallet> findAllByManagedUser_Email(String email);
 
-    Wallet findByEmailAndCurrency_Type(String email, String currencyType);
+    Wallet findByManagedUser_EmailAndCurrency_Type(String email, String currencyType);
 
 }

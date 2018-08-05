@@ -10,6 +10,9 @@ import com.zeed.paaro.lib.repository.WalletRepository;
 import com.zeed.paaro.lib.repository.WalletTransferTransactionRepository;
 import com.zeed.usermanagement.security.UserDetailsTokenEnvelope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +59,8 @@ public class TransferService {
         if (wallet.getAvailableAccountBalance().compareTo(walletTransferRequest.getTotalAmount()) < 0) {
             return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.UNABLE_TO_PROCESS, "Available balance cannot be less than total balance");
         }
+
+        // TODO : Validate to ensure that the transaction can only be from Naira wallet to other currency account and vice versa.
 
         walletTransferRequest.setWallet(wallet);
         walletTransferRequest.setFromCurrency(wallet.getCurrency());
@@ -159,6 +164,31 @@ public class TransferService {
         return walletTransferRequestResponse;
 
     }
+    public WalletTransferRequestResponse findAllTransferWalletTransactionsByUserWalletPaged(WalletTransferRequest walletTransferRequest) {
+
+        if (walletTransferRequest == null || StringUtils.isEmpty(walletTransferRequest.getCurrency())) {
+            return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "currency cannot be blank");
+        }
+
+        UserDetailsTokenEnvelope userDetailsTokenEnvelope = (UserDetailsTokenEnvelope) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetailsTokenEnvelope.managedUser.getEmail();
+
+        if (StringUtils.isEmpty(email)) {
+            return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.NULL_RESPONSE, "Unable to get email of the user");
+        }
+
+        Pageable pageable = new PageRequest(walletTransferRequest.getPageNo(), walletTransferRequest.getPageSize());
+
+        Page<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_EmailAndFromCurrency_Type(email, walletTransferRequest.getCurrency(), pageable);
+
+        WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
+        walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
+        walletTransferRequestResponse.setMessage("Transactions fetched by currency");
+        walletTransferRequestResponse.setWalletTransferTransactionPage(transferTransactions);
+
+        return walletTransferRequestResponse;
+
+    }
 
     public WalletTransferRequestResponse findAllTransferWalletTransactionsByUserWalletAndEmail(WalletTransferRequest walletTransferRequest) {
 
@@ -176,6 +206,27 @@ public class TransferService {
         return walletTransferRequestResponse;
 
     }
+
+    public WalletTransferRequestResponse findAllTransferWalletTransactionsByUserWalletAndEmailPaged(WalletTransferRequest walletTransferRequest) {
+
+        if (walletTransferRequest == null || StringUtils.isEmpty(walletTransferRequest.getCurrency()) || StringUtils.isEmpty(walletTransferRequest.getEmail())) {
+            return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "currency and email cannot be blank");
+        }
+
+        Pageable pageable = new PageRequest(walletTransferRequest.getPageNo(), walletTransferRequest.getPageSize());
+
+        Page<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_EmailAndFromCurrency_Type(walletTransferRequest.getEmail(), walletTransferRequest.getCurrency(), pageable);
+
+        WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
+        walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
+        walletTransferRequestResponse.setMessage("Transactions fetched by currency and email");
+        walletTransferRequestResponse.setWalletTransferTransactionPage(transferTransactions);
+
+        return walletTransferRequestResponse;
+
+    }
+
+
     public WalletTransferRequestResponse findAllTransferWalletTransactionsByEmail(WalletTransferRequest walletTransferRequest) {
 
         if (walletTransferRequest == null || StringUtils.isEmpty(walletTransferRequest.getEmail())) {
@@ -188,6 +239,24 @@ public class TransferService {
         walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
         walletTransferRequestResponse.setMessage("Transactions fetched");
         walletTransferRequestResponse.setWalletTransferTransactions(transferTransactions);
+
+        return walletTransferRequestResponse;
+
+    }
+    public WalletTransferRequestResponse findAllTransferWalletTransactionsByEmailPaged(WalletTransferRequest walletTransferRequest) {
+
+        if (walletTransferRequest == null || StringUtils.isEmpty(walletTransferRequest.getEmail())) {
+            return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Email cannot be blank");
+        }
+
+        Pageable pageable = new PageRequest(walletTransferRequest.getPageNo(), walletTransferRequest.getPageSize());
+
+        Page<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_Email(walletTransferRequest.getEmail(), pageable);
+
+        WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
+        walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
+        walletTransferRequestResponse.setMessage("Transactions fetched");
+        walletTransferRequestResponse.setWalletTransferTransactionPage(transferTransactions);
 
         return walletTransferRequestResponse;
 
@@ -210,6 +279,28 @@ public class TransferService {
         walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
         walletTransferRequestResponse.setMessage("Customer logged transactions fetched");
         walletTransferRequestResponse.setWalletTransferTransactions(transferTransactions);
+
+        return walletTransferRequestResponse;
+
+    }
+
+    public WalletTransferRequestResponse findAllCustomerLoggedTransferWalletTransactionsPaged(int pageSize, int pageNo) {
+
+
+        UserDetailsTokenEnvelope userDetailsTokenEnvelope = (UserDetailsTokenEnvelope) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetailsTokenEnvelope.managedUser.getEmail();
+
+        if (StringUtils.isEmpty(email)) {
+            return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.NULL_RESPONSE, "Unable to get email of the user");
+        }
+        Pageable pageable = new PageRequest(pageNo, pageSize);
+
+        Page<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_EmailAndTransactionStatus(email, TransactionStatus.CUSTOMER_LOGGED_REQUEST, pageable);
+
+        WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
+        walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
+        walletTransferRequestResponse.setMessage("Customer logged transactions fetched by page");
+        walletTransferRequestResponse.setWalletTransferTransactionPage(transferTransactions);
 
         return walletTransferRequestResponse;
 

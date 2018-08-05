@@ -1,9 +1,6 @@
 package com.zeed.paaro.lib.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -14,8 +11,10 @@ public class TransferRequestMap {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @OneToOne
     private WalletTransferTransaction nairaHolderTransaction;
 
+    @OneToOne
     private WalletTransferTransaction otherCurrencyHolderTransaction;
 
     @NotNull

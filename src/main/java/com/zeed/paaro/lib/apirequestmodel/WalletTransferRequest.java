@@ -40,6 +40,10 @@ public class WalletTransferRequest {
 
     private String currency;
 
+    private int pageNo = 0;
+
+    private int pageSize = 10;
+
     public String getEmail() {
         return email;
     }
@@ -166,5 +170,21 @@ public class WalletTransferRequest {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public int getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 }

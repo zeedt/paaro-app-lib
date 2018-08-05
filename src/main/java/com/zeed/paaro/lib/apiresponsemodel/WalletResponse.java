@@ -4,6 +4,7 @@ import com.zeed.paaro.lib.enums.ApiResponseCode;
 import com.zeed.paaro.lib.models.Wallet;
 import com.zeed.paaro.lib.models.WalletFundingTransaction;
 import com.zeed.usermanagement.enums.ResponseStatus;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class WalletResponse {
     private List<Wallet> walletList;
 
     List<WalletFundingTransaction> walletFundingTransactions;
+
+    Page<WalletFundingTransaction> walletFundingTransactionPage;
 
     public String getMessage() {
         return message;
@@ -68,5 +71,13 @@ public class WalletResponse {
 
     public void setWalletFundingTransactions(List<WalletFundingTransaction> walletFundingTransactions) {
         this.walletFundingTransactions = walletFundingTransactions;
+    }
+
+    public Page<WalletFundingTransaction> getWalletFundingTransactionPage() {
+        return walletFundingTransactionPage;
+    }
+
+    public void setWalletFundingTransactionPage(Page<WalletFundingTransaction> walletFundingTransactionPage) {
+        this.walletFundingTransactionPage = walletFundingTransactionPage;
     }
 }

@@ -13,6 +13,9 @@ import com.zeed.usermanagement.security.UserDetailsTokenEnvelope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -255,6 +258,32 @@ public class WalletService {
 
     }
 
+    public WalletResponse findALlFundingWalletTransactionsByUserWalletPaged(WalletRequest walletRequest) {
+
+        if (walletRequest == null || StringUtils.isEmpty(walletRequest.getCurrencyType())) {
+            return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Currency type cannot be blank");
+        }
+
+        UserDetailsTokenEnvelope userDetailsTokenEnvelope = (UserDetailsTokenEnvelope) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetailsTokenEnvelope.managedUser.getEmail();
+
+        if (StringUtils.isEmpty(email)) {
+            return WalletResponse.returnResponseWithCode(ApiResponseCode.NULL_RESPONSE, "Unable to get email of the user");
+        }
+
+        Pageable pageable = new PageRequest(walletRequest.getPageNo(), walletRequest.getPageSize());
+
+        Page<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByManagedUser_EmailAndCurrency_Type(email, walletRequest.getCurrencyType(), pageable);
+
+        WalletResponse walletResponse = new WalletResponse();
+        walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
+        walletResponse.setMessage("Transactions fetched");
+        walletResponse.setWalletFundingTransactionPage(fundingTransactions);
+
+        return walletResponse;
+
+    }
+
     public WalletResponse findALlFundingWalletTransactionsByEmail(WalletRequest walletRequest) {
 
         if (walletRequest == null || StringUtils.isEmpty(walletRequest.getCurrencyType()) || StringUtils.isEmpty(walletRequest.getEmail())) {
@@ -267,6 +296,25 @@ public class WalletService {
         walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
         walletResponse.setMessage("Transactions fetched");
         walletResponse.setWalletFundingTransactions(fundingTransactions);
+
+        return walletResponse;
+
+    }
+
+    public WalletResponse findALlFundingWalletTransactionsByEmailPaged(WalletRequest walletRequest) {
+
+        if (walletRequest == null || StringUtils.isEmpty(walletRequest.getCurrencyType()) || StringUtils.isEmpty(walletRequest.getEmail())) {
+            return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Currency type and email cannot be blank");
+        }
+
+        Pageable pageable = new PageRequest(walletRequest.getPageNo(), walletRequest.getPageSize());
+
+        Page<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByManagedUser_EmailAndCurrency_Type(walletRequest.getEmail(), walletRequest.getCurrencyType(), pageable);
+
+        WalletResponse walletResponse = new WalletResponse();
+        walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
+        walletResponse.setMessage("Transactions fetched");
+        walletResponse.setWalletFundingTransactionPage(fundingTransactions);
 
         return walletResponse;
 

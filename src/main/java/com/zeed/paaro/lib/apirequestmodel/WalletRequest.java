@@ -45,6 +45,8 @@ public class WalletRequest {
 
     private int pageSize = 10;
 
+    private String filter;
+
     public String getCurrencyType() {
         return currencyType;
     }
@@ -187,5 +189,13 @@ public class WalletRequest {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 }

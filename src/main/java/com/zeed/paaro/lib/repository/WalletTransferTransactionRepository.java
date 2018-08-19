@@ -21,6 +21,8 @@ public interface WalletTransferTransactionRepository extends JpaRepository<Walle
 
     Page<WalletTransferTransaction> findAllByManagedUser_Email(String email, Pageable pageable);
 
+    Page<WalletTransferTransaction> findAllByManagedUser_EmailAndToAccountNameLike(String email, String accountName, Pageable pageable);
+
     List<WalletTransferTransaction> findAllByManagedUser_EmailAndTransactionStatus(String email, TransactionStatus transactionStatus);
 
     Page<WalletTransferTransaction> findAllByManagedUser_EmailAndTransactionStatus(String email, TransactionStatus transactionStatus, Pageable pageable);

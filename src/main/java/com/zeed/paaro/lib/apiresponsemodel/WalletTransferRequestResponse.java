@@ -5,7 +5,9 @@ import com.zeed.paaro.lib.enums.ApiResponseCode;
 import com.zeed.paaro.lib.models.Wallet;
 import com.zeed.paaro.lib.models.WalletTransferTransaction;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WalletTransferRequestResponse {
@@ -14,11 +16,11 @@ public class WalletTransferRequestResponse {
 
     private ApiResponseCode responseStatus;
 
-    private List<WalletTransferTransaction> walletTransferTransactions;
+    private List<WalletTransferTransaction> walletTransferTransactions = new ArrayList<>();
 
-    private Page<WalletTransferTransaction> walletTransferTransactionPage;
+    private Page<WalletTransferTransaction> walletTransferTransactionPage = new PageImpl<>(new ArrayList<>());
 
-    private WalletTransferTransaction walletTransferTransaction;
+    private WalletTransferTransaction walletTransferTransaction = new WalletTransferTransaction();
 
     private Wallet wallet;
 

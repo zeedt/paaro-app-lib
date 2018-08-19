@@ -284,7 +284,7 @@ public class WalletService {
 
     }
 
-    public WalletResponse findALlFundingWalletTransactionsByEmail(WalletRequest walletRequest) {
+    public WalletResponse findALlFundingWalletTransactionsByEmailAndCurrency(WalletRequest walletRequest) {
 
         if (walletRequest == null || StringUtils.isEmpty(walletRequest.getCurrencyType()) || StringUtils.isEmpty(walletRequest.getEmail())) {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Currency type and email cannot be blank");
@@ -301,7 +301,7 @@ public class WalletService {
 
     }
 
-    public WalletResponse findALlFundingWalletTransactionsByEmailPaged(WalletRequest walletRequest) {
+    public WalletResponse findALlFundingWalletTransactionsByEmailAndCurrencyPaged(WalletRequest walletRequest) {
 
         if (walletRequest == null || StringUtils.isEmpty(walletRequest.getCurrencyType()) || StringUtils.isEmpty(walletRequest.getEmail())) {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Currency type and email cannot be blank");
@@ -320,6 +320,25 @@ public class WalletService {
 
     }
 
+    public WalletResponse findALlFundingWalletTransactionsByEmailPaged(WalletRequest walletRequest) {
+
+        if (walletRequest == null || StringUtils.isEmpty(walletRequest.getEmail())) {
+            return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Email cannot be blank");
+        }
+
+        Pageable pageable = new PageRequest(walletRequest.getPageNo(), walletRequest.getPageSize());
+
+        Page<WalletFundingTransaction> fundingTransactions = walletFundingTransactionRepository.findAllByWallet_ManagedUser_Email(walletRequest.getEmail(), pageable);
+
+        WalletResponse walletResponse = new WalletResponse();
+        walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
+        walletResponse.setMessage("Transactions fetched");
+        walletResponse.setWalletFundingTransactionPage(fundingTransactions);
+
+        return walletResponse;
+
+    }
+
 
 
     public String getValidationRequestErrorMessage(WalletRequest walletRequest) {
@@ -328,7 +347,7 @@ public class WalletService {
                 StringUtils.isEmpty(walletRequest.getPaaroTransactionReferenceId())  || StringUtils.isEmpty(walletRequest.getThirdPartyTransactionId())
                 || StringUtils.isEmpty(walletRequest.getCurrencyType()) || walletRequest.getTransactionStatus() == null ) {
 
-            return "Nnarration, paaro transaction reference id, transaction status, third party transaction reference id and currency type cannot be blank.";
+            return "Narration, paaro transaction reference id, transaction status, third party transaction reference id and currency type cannot be blank.";
 
         }
 

@@ -16,4 +16,6 @@ public interface WalletFundingTransactionRepository extends JpaRepository<Wallet
 
     Page<WalletFundingTransaction> findAllByManagedUser_EmailAndCurrency_Type(String email, String currencyType, Pageable pageable);
 
+    Page<WalletFundingTransaction> findAllByWallet_ManagedUser_Email(String email, Pageable pageable);
+
 }

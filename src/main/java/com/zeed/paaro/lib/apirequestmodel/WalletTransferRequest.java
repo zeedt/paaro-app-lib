@@ -30,6 +30,8 @@ public class WalletTransferRequest {
 
     private String toAccountNumber;
 
+    private String toAccountName;
+
     private BigDecimal exchangeRate;
 
     private Currency fromCurrency;
@@ -39,6 +41,8 @@ public class WalletTransferRequest {
     private Wallet wallet;
 
     private String currency;
+
+    private String filter;
 
     private int pageNo = 0;
 
@@ -186,5 +190,21 @@ public class WalletTransferRequest {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getToAccountName() {
+        return toAccountName;
+    }
+
+    public void setToAccountName(String toAccountName) {
+        this.toAccountName = toAccountName;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 }

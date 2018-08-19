@@ -23,6 +23,8 @@ public class Transaction implements Serializable {
 
     private String toAccountNumber;
 
+    private String toAccountName;
+
     @Enumerated(value = EnumType.STRING)
     @NotNull
     private TransactionStatus transactionStatus;
@@ -244,5 +246,13 @@ public class Transaction implements Serializable {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public String getToAccountName() {
+        return toAccountName;
+    }
+
+    public void setToAccountName(String toAccountName) {
+        this.toAccountName = toAccountName;
     }
 }

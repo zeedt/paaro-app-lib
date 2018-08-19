@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,9 +92,9 @@ public class TransferService {
 
         if (StringUtils.isEmpty(walletTransferRequest.getNarration()) ||
                 StringUtils.isEmpty(walletTransferRequest.getPaaroTransactionReferenceId())  || StringUtils.isEmpty(walletTransferRequest.getToCurrencyType())
-                || StringUtils.isEmpty(walletTransferRequest.getFromCurrencyType()) ) {
+                || StringUtils.isEmpty(walletTransferRequest.getFromCurrencyType())|| StringUtils.isEmpty(walletTransferRequest.getToAccountName()) ) {
 
-            return "Narration, paaro transaction reference id, from and to currency type cannot be blank.";
+            return "Narration, paaro transaction reference id, account name, from and to currency type cannot be blank.";
 
         }
 
@@ -249,9 +250,28 @@ public class TransferService {
             return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Email cannot be blank");
         }
 
-        Pageable pageable = new PageRequest(walletTransferRequest.getPageNo(), walletTransferRequest.getPageSize());
+        Pageable pageable = new PageRequest(walletTransferRequest.getPageNo(), walletTransferRequest.getPageSize(), Sort.Direction.DESC, "id" );
 
         Page<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_Email(walletTransferRequest.getEmail(), pageable);
+
+        WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
+        walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
+        walletTransferRequestResponse.setMessage("Transactions fetched");
+        walletTransferRequestResponse.setWalletTransferTransactionPage(transferTransactions);
+
+        return walletTransferRequestResponse;
+
+    }
+
+    public WalletTransferRequestResponse findAllTransferWalletTransactionsByEmailPagedWithFilter(WalletTransferRequest walletTransferRequest) {
+
+        if (walletTransferRequest == null || StringUtils.isEmpty(walletTransferRequest.getEmail()) || StringUtils.isEmpty(walletTransferRequest.getFilter())) {
+            return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Email and filter cannot be blank");
+        }
+
+        Pageable pageable = new PageRequest(walletTransferRequest.getPageNo(), walletTransferRequest.getPageSize(), Sort.Direction.DESC, "id" );
+
+        Page<WalletTransferTransaction> transferTransactions = walletTransferTransactionRepository.findAllByManagedUser_EmailAndToAccountNameLike(walletTransferRequest.getEmail(), "%"+walletTransferRequest.getFilter().trim()+"%",pageable);
 
         WalletTransferRequestResponse walletTransferRequestResponse = new WalletTransferRequestResponse();
         walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
@@ -323,6 +343,7 @@ public class TransferService {
         transaction.setNarration(walletTransferRequest.getNarration());
         transaction.setInitiatedDate(new Date());
         transaction.setLastUpdatedDate(transaction.getInitiatedDate());
+        transaction.setToAccountName(walletTransferRequest.getToAccountName());
         transaction.setPaaroReferenceId(walletTransferRequest.getPaaroTransactionReferenceId());
         transaction.setTransactionStatus(TransactionStatus.CUSTOMER_LOGGED_REQUEST);
 

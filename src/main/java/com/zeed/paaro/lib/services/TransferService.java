@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -37,9 +38,12 @@ public class TransferService {
     private WalletRepository walletRepository;
 
     @Autowired
+    private WalletEmailService walletEmailService;
+
+    @Autowired
     private WalletTransferTransactionRepository walletTransferTransactionRepository;
 
-    public WalletTransferRequestResponse logCustomerTransferRequest(WalletTransferRequest walletTransferRequest) {
+    public WalletTransferRequestResponse logCustomerTransferRequest(WalletTransferRequest walletTransferRequest) throws IOException {
 
         if (walletTransferRequest == null) {
             return WalletTransferRequestResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Invalid request");
@@ -83,6 +87,8 @@ public class TransferService {
         walletTransferRequestResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
         walletTransferRequestResponse.setWallet(wallet);
 
+        walletEmailService.sendTransferRequestEmail(walletTransferTransaction);
+
         return walletTransferRequestResponse;
 
     }
@@ -92,9 +98,9 @@ public class TransferService {
 
         if (StringUtils.isEmpty(walletTransferRequest.getNarration()) ||
                 StringUtils.isEmpty(walletTransferRequest.getPaaroTransactionReferenceId())  || StringUtils.isEmpty(walletTransferRequest.getToCurrencyType())
-                || StringUtils.isEmpty(walletTransferRequest.getFromCurrencyType())|| StringUtils.isEmpty(walletTransferRequest.getToAccountName()) ) {
+                || StringUtils.isEmpty(walletTransferRequest.getFromCurrencyType())|| StringUtils.isEmpty(walletTransferRequest.getToAccountName()) || StringUtils.isEmpty(walletTransferRequest.getToAccountNumber()) ) {
 
-            return "Narration, paaro transaction reference id, account name, from and to currency type cannot be blank.";
+            return "Narration, paaro transaction reference id, account name, account number, from and to currency type cannot be blank.";
 
         }
 

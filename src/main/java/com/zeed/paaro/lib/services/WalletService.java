@@ -2,7 +2,6 @@ package com.zeed.paaro.lib.services;
 
 import com.zeed.paaro.lib.apirequestmodel.WalletRequest;
 import com.zeed.paaro.lib.apiresponsemodel.WalletResponse;
-import com.zeed.paaro.lib.email.sendgrid.SendGridEmail;
 import com.zeed.paaro.lib.enums.ApiResponseCode;
 import com.zeed.paaro.lib.enums.TransactionStatus;
 import com.zeed.paaro.lib.models.*;
@@ -39,7 +38,7 @@ public class WalletService {
     private CurrencyRepository currencyRepository;
 
     @Autowired
-    private SendGridEmail sendGridEmail;
+    private WalletEmailService walletEmailService;
 
     @Autowired
     private WalletFundingTransactionRepository walletFundingTransactionRepository;
@@ -145,7 +144,7 @@ public class WalletService {
 
     }
 
-    public WalletResponse addWallet(WalletRequest walletRequest) {
+    public WalletResponse addWallet(WalletRequest walletRequest) throws IOException {
 
         if ( walletRequest == null || StringUtils.isEmpty(walletRequest.getCurrencyType()) ) {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Currency type cannot be blank");
@@ -181,14 +180,13 @@ public class WalletService {
             walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
             walletResponse.setWallet(wallet);
 
-            //Notification test
-            sendWalletNotification();
+            walletEmailService.sendWalletAdditionToAccountEmail(wallet);
             return walletResponse;
         }
 
     }
 
-    public WalletResponse fundWallet(WalletRequest walletRequest) {
+    public WalletResponse fundWallet(WalletRequest walletRequest) throws IOException {
 
         if (walletRequest == null || walletRequest.getTransactionStatus() == null) {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Request and transaction status cannot be null");
@@ -230,11 +228,13 @@ public class WalletService {
         walletResponse.setWallet(wallet);
         walletResponse.setResponseStatus(ApiResponseCode.SUCCESSFUL);
 
+        walletEmailService.sendWalletFundingEmail(wallet, fundingTransaction.getActualAmount());
+
         return walletResponse;
 
     }
 
-    public WalletResponse findALlFundingWalletTransactionsByUserWallet(WalletRequest walletRequest) {
+    public WalletResponse findAllFundingWalletTransactionsByUserWallet(WalletRequest walletRequest) {
 
         if (walletRequest == null || StringUtils.isEmpty(walletRequest.getCurrencyType())) {
             return WalletResponse.returnResponseWithCode(ApiResponseCode.INVALID_REQUEST, "Currency type cannot be blank");
@@ -422,25 +422,6 @@ public class WalletService {
 
         return transaction;
 
-    }
-
-    public void sendWalletNotification() {
-
-        try {
-
-            EmailNotification emailNotification = new EmailNotification();
-            emailNotification.setContent("<h3>Dear pal</h3> A new wallet has been added to your paaro account");
-            emailNotification.setSubject("Paaro - Wallet creation");
-            emailNotification.setTo("yusufsaheedtaiwo@gmail.com");
-            emailNotification.addTo("soluwawunmi@gmail.com");
-
-            sendGridEmail.sendEmailWithNoAttachment(emailNotification);
-
-        } catch (IOException e) {
-
-            logger.error("Error occured while sending notification due to ", e);
-
-        }
     }
 
 

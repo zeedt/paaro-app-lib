@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -421,6 +422,23 @@ public class WalletService {
         transaction.setTransactionStatus(walletRequest.getTransactionStatus());
 
         return transaction;
+
+    }
+
+    public Page<WalletFundingTransaction> findWalletFundingTransactionPageWithFilter (int pageNo, int pageSize, String filter) {
+
+        PageRequest pageRequest = new PageRequest(pageNo, pageSize, Sort.Direction.DESC, "id");
+
+        return walletFundingTransactionRepository.filterByWalletUserFirstOrLastName("%"+filter+"%",pageRequest);
+
+    }
+
+
+    public Page<WalletFundingTransaction> findWalletFundingTransactionPage (int pageNo, int pageSize) {
+
+        PageRequest pageRequest = new PageRequest(pageNo, pageSize, Sort.Direction.DESC, "id");
+
+        return walletFundingTransactionRepository.findAllByIdIsNotNull(pageRequest);
 
     }
 

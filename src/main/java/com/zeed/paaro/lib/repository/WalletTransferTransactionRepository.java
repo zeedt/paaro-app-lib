@@ -35,4 +35,10 @@ public interface WalletTransferTransactionRepository extends JpaRepository<Walle
 
     List<WalletTransferTransaction> findAllByFromCurrency_TypeNotInAndTransferRequestMapIsNull(String currency);
 
+    Page<WalletTransferTransaction> findAllByIdIsNotNull(Pageable pageable);
+
+    Page<WalletTransferTransaction> findAllByIdIsNotNullAndToAccountNumberIsLike(String accountName, Pageable pageable);
+
+    Page<WalletTransferTransaction> findAllByIdIsNotNullAndToAccountNameIsLike(String accountName, Pageable pageable);
+
 }

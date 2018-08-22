@@ -357,5 +357,21 @@ public class TransferService {
 
     }
 
+    public Page<WalletTransferTransaction> findWalletTransferTransactionPage(int pageNo, int pageSize, String filter) {
+
+        PageRequest pageRequest = new PageRequest(pageNo, pageSize, Sort.Direction.DESC, "id");
+
+        return walletTransferTransactionRepository.findAllByIdIsNotNullAndToAccountNameIsLike("%"+filter+"%", pageRequest);
+
+    }
+
+    public Page<WalletTransferTransaction> findWalletTransferTransactionPageWithFilter(int pageNo, int pageSize) {
+
+        PageRequest pageRequest = new PageRequest(pageNo, pageSize, Sort.Direction.DESC, "id");
+
+        return walletTransferTransactionRepository.findAllByIdIsNotNull(pageRequest);
+
+    }
+
 
 }

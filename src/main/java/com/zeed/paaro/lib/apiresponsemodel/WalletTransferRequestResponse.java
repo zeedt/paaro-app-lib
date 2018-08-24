@@ -2,11 +2,13 @@ package com.zeed.paaro.lib.apiresponsemodel;
 
 
 import com.zeed.paaro.lib.enums.ApiResponseCode;
+import com.zeed.paaro.lib.models.Currency;
 import com.zeed.paaro.lib.models.Wallet;
 import com.zeed.paaro.lib.models.WalletTransferTransaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,25 @@ public class WalletTransferRequestResponse {
 
     private String message;
 
+    private BigDecimal charges;
+
+    private Double chargeRate;
+
+    private Double rate;
+
+    private BigDecimal equivalentAmount;
+
+    private BigDecimal totalAmount;
+
+    private BigDecimal amount;
+
+    private BigDecimal exchangeRate;
+
     private ApiResponseCode responseStatus;
+
+    private Currency fromCurrency;
+
+    private Currency toCurrency;
 
     private List<WalletTransferTransaction> walletTransferTransactions = new ArrayList<>();
 
@@ -77,5 +97,77 @@ public class WalletTransferRequestResponse {
 
     public void setWalletTransferTransactionPage(Page<WalletTransferTransaction> walletTransferTransactionPage) {
         this.walletTransferTransactionPage = walletTransferTransactionPage;
+    }
+
+    public BigDecimal getCharges() {
+        return charges;
+    }
+
+    public void setCharges(BigDecimal charges) {
+        this.charges = charges;
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
+    }
+
+    public BigDecimal getEquivalentAmount() {
+        return equivalentAmount;
+    }
+
+    public void setEquivalentAmount(BigDecimal equivalentAmount) {
+        this.equivalentAmount = equivalentAmount;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public BigDecimal getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(BigDecimal exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+    public Double getChargeRate() {
+        return chargeRate;
+    }
+
+    public void setChargeRate(Double chargeRate) {
+        this.chargeRate = chargeRate;
+    }
+
+    public Currency getFromCurrency() {
+        return fromCurrency;
+    }
+
+    public void setFromCurrency(Currency fromCurrency) {
+        this.fromCurrency = fromCurrency;
+    }
+
+    public Currency getToCurrency() {
+        return toCurrency;
+    }
+
+    public void setToCurrency(Currency toCurrency) {
+        this.toCurrency = toCurrency;
     }
 }

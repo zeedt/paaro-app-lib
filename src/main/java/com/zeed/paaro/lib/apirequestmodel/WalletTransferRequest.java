@@ -44,6 +44,8 @@ public class WalletTransferRequest {
 
     private String filter;
 
+    private String token;
+
     private int pageNo = 0;
 
     private int pageSize = 10;
@@ -206,5 +208,13 @@ public class WalletTransferRequest {
 
     public void setFilter(String filter) {
         this.filter = filter;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -14,6 +14,9 @@ import org.thymeleaf.context.Context;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class WalletEmailService {
@@ -31,13 +34,17 @@ public class WalletEmailService {
 
     @Value("${email.fund-wallet:email-template/wallet-funding}")
     private String fundWalletPath;
+
     @Value("${email.fund-wallet-subject:Paaro - Wallet Funding}")
     private String fundWalletSubject;
 
     @Value("${email.fund-wallet:email-template/transfer-request}")
     private String transferRequestPath;
+
     @Value("${email.fund-wallet-subject:Paaro - Transfer Request}")
     private String transferRequestSubject;
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(4);
 
 
     @Autowired
@@ -55,7 +62,13 @@ public class WalletEmailService {
         emailNotification.addTo("soluwawunmi@gmail.com");
         emailNotification.addTo(wallet.getManagedUser().getEmail());
 
-        sendGridEmail.sendEmailWithNoAttachment(emailNotification);
+        executorService.submit(()->{
+            try {
+                sendGridEmail.sendEmailWithNoAttachment(emailNotification);
+            } catch (IOException e) {
+
+            }
+        });
     }
 
     @Async
@@ -68,7 +81,13 @@ public class WalletEmailService {
         emailNotification.addTo("soluwawunmi@gmail.com");
         emailNotification.addTo(wallet.getManagedUser().getEmail());
 
-        sendGridEmail.sendEmailWithNoAttachment(emailNotification);
+        executorService.submit(()->{
+            try {
+                sendGridEmail.sendEmailWithNoAttachment(emailNotification);
+            } catch (IOException e) {
+
+            }
+        });
     }
 
     @Async
@@ -81,7 +100,13 @@ public class WalletEmailService {
         emailNotification.addTo("soluwawunmi@gmail.com");
         emailNotification.addTo(transaction.getWallet().getManagedUser().getEmail());
 
-        sendGridEmail.sendEmailWithNoAttachment(emailNotification);
+        executorService.submit(()->{
+            try {
+                sendGridEmail.sendEmailWithNoAttachment(emailNotification);
+            } catch (IOException e) {
+
+            }
+        });
     }
 
 
@@ -117,6 +142,24 @@ public class WalletEmailService {
         context.setVariable("ledgerBalance", transaction.getWallet().getLedgerAccountBalance());
         return this.templateEngine.process(transferRequestPath,context);
 
+    }
+
+    @Async
+    public void sendToken(String email, String token) throws IOException {
+        EmailNotification emailNotification = new EmailNotification();
+        emailNotification.setContent("Dear user<p></p> Your token is " + token);
+        emailNotification.setSubject(transferRequestSubject);
+        emailNotification.setTo("yusufsaheedtaiwo@gmail.com");
+        emailNotification.addTo("soluwawunmi@gmail.com");
+        emailNotification.addTo(email);
+
+        executorService.submit(()->{
+            try {
+                sendGridEmail.sendEmailWithNoAttachment(emailNotification);
+            } catch (IOException e) {
+
+            }
+        });
     }
 
 

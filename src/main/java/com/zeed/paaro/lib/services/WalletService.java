@@ -442,6 +442,12 @@ public class WalletService {
 
     }
 
+    private List<Wallet> getAllTransferTransactionsByEmail(String email) {
+
+        return walletRepository.findAllByManagedUser_Email(email);
+
+    }
+
 
 
 }

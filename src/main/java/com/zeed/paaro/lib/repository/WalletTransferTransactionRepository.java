@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -40,5 +41,11 @@ public interface WalletTransferTransactionRepository extends JpaRepository<Walle
     Page<WalletTransferTransaction> findAllByIdIsNotNullAndToAccountNumberIsLike(String accountName, Pageable pageable);
 
     Page<WalletTransferTransaction> findAllByIdIsNotNullAndToAccountNameIsLike(String accountName, Pageable pageable);
+
+    List<WalletTransferTransaction> findAllByIdIsNotNullAndToAccountNameIsLike(String accountName);
+
+    Page<WalletTransferTransaction> findAllByIdIsNotNullAndToAccountNameIsLikeAndInitiatedDateIsBetween(String accountName, Date fromDate, Date toDate, Pageable pageable);
+
+    List<WalletTransferTransaction> findAllByIdIsNotNullAndToAccountNameIsLikeAndInitiatedDateIsBetween(String accountName, Date fromDate, Date toDate);
 
 }

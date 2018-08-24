@@ -5,7 +5,9 @@ import com.zeed.paaro.lib.models.Wallet;
 import com.zeed.paaro.lib.models.WalletFundingTransaction;
 import com.zeed.usermanagement.enums.ResponseStatus;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WalletResponse {
@@ -16,11 +18,11 @@ public class WalletResponse {
 
     private Wallet wallet;
 
-    private List<Wallet> walletList;
+    private List<Wallet> walletList = new ArrayList<>();
 
-    List<WalletFundingTransaction> walletFundingTransactions;
+    List<WalletFundingTransaction> walletFundingTransactions = new ArrayList<>();
 
-    Page<WalletFundingTransaction> walletFundingTransactionPage;
+    Page<WalletFundingTransaction> walletFundingTransactionPage = new PageImpl<>(new ArrayList<>());
 
     public String getMessage() {
         return message;
